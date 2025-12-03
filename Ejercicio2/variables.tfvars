@@ -1,0 +1,8 @@
+mariadb_user = "db_matomo"
+mariadb_database = "matomo"
+mariadb_password = "matomo123"
+allow_empty_pass = "no"
+docker_registry = "docker.io"
+docker_username = "tu_usuario_dockerhub"
+cluster_name = "kubernetes-cluster"
+cluster_context = "kind-kubernetes-cluster"

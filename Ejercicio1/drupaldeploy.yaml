@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal-deployment
+spec:
+  selector:
+    matchLabels:
+      app: drupal
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: drupal
+    spec:
+      initContainers:
+      - name: init-sites-volume
+        image: drupal:latest
+        command: ['sh', '-c', 'if [ ! -f "/data/default/settings.php" ]; then echo "Inicializando..."; cp -a /var/www/html/sites/. /data/; else echo "Ya existen datos"; fi']
+        volumeMounts:
+        - name: drupal-persistent
+          mountPath: /var/www/html/sites
+      
+      containers:
+      - image: drupal:latest
+        name: drupal
+        ports:
+        - containerPort: 80
+          name: drupal
+        volumeMounts:
+        - name: drupal-persistent
+          mountPath: /var/www/html/sites
+      volumes:
+      - name: drupal-persistent
+        persistentVolumeClaim:
+          claimName: drupal-alm
