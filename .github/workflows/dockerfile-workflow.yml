@@ -11,4 +11,4 @@ jobs:
         - uses: actions/checkout@v5
         - run:  docker login -u 7limnes7 -p ${{ secrets.vs}}
         - run:  docker build -t 7limnes7/matomo:latest -f .Ejercicio2/Dockerfile .
-        - run:  docker push 7limnes7/matomo:latest
+        - run:  docker push 7limnes7/matomo:lastest
