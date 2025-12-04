@@ -9,5 +9,5 @@ terraform {
 
 provider "kubernetes" {
     config_path = "~/.kube/config"
-    config_context = "kind-kind"
+    config_context = "kind-kubernetes-cluster"
 }

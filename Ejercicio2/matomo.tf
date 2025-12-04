@@ -1,116 +1,79 @@
-resource "kubernetes_deployment" "matomo"
-{
-    metadata
-    {
+resource "kubernetes_deployment" "matomo" {
+    metadata {
         name = "matomo"
-        labels =
-        {
+        labels = {
             app = "matomo"
         }
     }
 
-    spec
-    {
+    spec {
         replicas = 1
-
-        selector
-        {
-            match_labels =
-            {
+        selector {
+            match_labels = {
                 app = "matomo"
             }
         }
 
-        strategy
-        {
+        strategy {
             type = "Recreate"
         }
 
-        template
-        {
-            metadata
-            {
-                labels =
-                {
+        template {
+            metadata {
+                labels = {
                     app = "matomo"
                 }
             }
 
-            spec
-            {
-                container
-                {
+            spec {
+                container {
                     name = "matomo"
-                    image = "${var.docker_registry}/${var.docker_username}/matomo:latest"
+                    image = "matomo:latest"
 
-                    port
-                    {
+                    port {
                         container_port = 80
                         name = "http"
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_HOST"
                         value = "service-mariadb"
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_ADAPTER"
                         value = "mysql"
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_TABLES_PREFIX"
                         value = "matomo_"
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_USERNAME"
                         value = var.mariadb_user
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_PASSWORD"
                         value = var.mariadb_password
                     }
 
-                    env
-                    {
+                    env {
                         name = "MATOMO_DATABASE_DBNAME"
                         value = var.mariadb_database
                     }
 
-                    volume_mount
-                    {
+                    volume_mount {
                         name = "matomo-data"
                         mount_path = "/var/www/html"
                     }
-
-                    resources
-                    {
-                        requests =
-                        {
-                            cpu = "100m"
-                            memory = "256Mi"
-                        }
-                        limits =
-                        {
-                            cpu = "500m"
-                            memory = "512Mi"
-                        }
-                    }
                 }
 
-                volume
-                {
+                volume {
                     name = "matomo-data"
-                    persistent_volume_claim
-                    {
+                    persistent_volume_claim {
                         claim_name = "matomo-pvc"
                     }
                 }
@@ -119,29 +82,22 @@ resource "kubernetes_deployment" "matomo"
     }
 }
 
-# Service de Matomo (NodePort)
-resource "kubernetes_service" "matomo_service"
-{
-    metadata
-    {
+resource "kubernetes_service" "matomo_service" {
+    metadata {
         name = "matomo-service"
-        labels =
-        {
+        labels = {
             app = "matomo"
         }
     }
 
-    spec
-    {
+    spec {
         type = "NodePort"
 
-        selector =
-        {
+        selector = {
             app = "matomo"
         }
 
-        port
-        {
+        port {
             name = "http"
             port = 80
             target_port = 80
