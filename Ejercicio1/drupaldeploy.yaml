@@ -6,8 +6,6 @@ spec:
   selector:
     matchLabels:
       app: drupal
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -19,7 +17,7 @@ spec:
         command: ['sh', '-c', 'if [ ! -f "/data/default/settings.php" ]; then echo "Inicializando..."; cp -a /var/www/html/sites/. /data/; else echo "Ya existen datos"; fi']
         volumeMounts:
         - name: drupal-persistent
-          mountPath: /var/www/html/sites
+          mountPath: /data
       
       containers:
       - image: drupal:latest

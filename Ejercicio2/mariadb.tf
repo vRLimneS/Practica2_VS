@@ -20,10 +20,6 @@ resource "kubernetes_deployment" "mariadb" {
             }
             spec {
                 container {
-                    volume_mount {
-                        name = "mariadb-alm"
-                        mount_path = "/bitnami/mariadb"
-                    }
                     name = "mariadb"
                     image = "bitnami/mariadb:latest"
                     port {
@@ -31,7 +27,7 @@ resource "kubernetes_deployment" "mariadb" {
                     }
                     env {
                         name = "ALLOW_EMPTY_PASSWORD"
-                        value = "yes"
+                        value = "var.allow_empty_pass"
                     }
                     env {
                         name = "MARIADB_ROOT_PASSWORD"
@@ -48,6 +44,10 @@ resource "kubernetes_deployment" "mariadb" {
                     env {
                         name = "MARIADB_DATABASE"
                         value = var.mariadb_database
+                    }
+                    volume_mount {
+                        name = "mariadb-alm"
+                        mount_path = "/bitnami/mariadb"
                     }
                 }
                 volume {

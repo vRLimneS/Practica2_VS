@@ -1,0 +1,13 @@
+
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform.tfstate.lock.info
+
+kubeconfig
+*.kubeconfig
+
+.vscode/
+*.pdf
